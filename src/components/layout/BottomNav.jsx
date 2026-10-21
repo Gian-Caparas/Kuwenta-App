@@ -15,7 +15,7 @@ export default function BottomNav() {
 
   return (
     <nav className="nav-shell" aria-label="Pangunahing navigation">
-      <div className="brand"><span className="brand-mark">K</span><span>Kuewenta</span></div>
+      <div className="brand"><span className="brand-mark">K</span><span>Kuwenta</span></div>
       {tabs.map((tab) => (
         <button
           type="button"
