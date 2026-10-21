@@ -68,6 +68,18 @@ export function CustomersProvider({ children }) {
     return data;
   }, []);
 
+  const updateCustomer = useCallback(async (id, { name, phone, notes }) => {
+    const { data, error: updateError } = await supabase
+      .from("customers")
+      .update({ name, phone: phone || null, notes: notes || null })
+      .eq("id", id)
+      .select()
+      .single();
+    if (updateError) throw updateError;
+    setRawCustomers((list) => list.map((customer) => (customer.id === id ? data : customer)));
+    return data;
+  }, []);
+
   const addTransaction = useCallback(async (customerId, type, amount, note) => {
     const { data, error: insertError } = await supabase
       .from("transactions")
@@ -80,8 +92,18 @@ export function CustomersProvider({ children }) {
   }, []);
 
   const value = useMemo(
-    () => ({ customers, transactions, loading, error, reload, getCustomer, addCustomer, addTransaction }),
-    [customers, transactions, loading, error, reload, getCustomer, addCustomer, addTransaction]
+    () => ({
+      customers,
+      transactions,
+      loading,
+      error,
+      reload,
+      getCustomer,
+      addCustomer,
+      updateCustomer,
+      addTransaction,
+    }),
+    [customers, transactions, loading, error, reload, getCustomer, addCustomer, updateCustomer, addTransaction]
   );
 
   return <CustomersContext.Provider value={value}>{children}</CustomersContext.Provider>;

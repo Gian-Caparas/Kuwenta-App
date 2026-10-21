@@ -5,11 +5,13 @@ import Icon from "../components/ui/Icon";
 import { useToast } from "../context/ToastContext";
 import { useProfile } from "../hooks/useProfile";
 import { supabase } from "../lib/supabase";
+import { useTheme } from "../context/ThemeContext";
 
 export default function Settings() {
   const [language, setLanguage] = useState("Filipino");
   const { storeName, email } = useProfile();
   const { notify } = useToast();
+  const { darkMode, setDarkMode } = useTheme();
   const [name, setName] = useState(storeName);
 
   const saveStoreName = async () => {
@@ -43,6 +45,19 @@ export default function Settings() {
               <button type="button" onClick={() => setLanguage("Filipino")} className={language === "Filipino" ? "active" : ""}>Filipino</button>
               <button type="button" onClick={() => setLanguage("English")} className={language === "English" ? "active" : ""}>English</button>
             </div>
+          </div>
+          <div className="setting-row">
+            <span className="setting-icon"><Icon name={darkMode ? "moon" : "sun"} /></span>
+            <span><strong>Dark mode</strong><small>{darkMode ? "Mas madilim na tema" : "Tema maliwanag"}</small></span>
+            <button
+              type="button"
+              className={`theme-toggle ${darkMode ? "on" : ""}`}
+              onClick={() => setDarkMode((enabled) => !enabled)}
+              aria-pressed={darkMode}
+              aria-label={`${darkMode ? "I-off" : "I-on"} ang dark mode`}
+            >
+              <span />
+            </button>
           </div>
         </div>
 

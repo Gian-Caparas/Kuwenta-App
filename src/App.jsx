@@ -9,6 +9,7 @@ import AddDebt from "./pages/AddDebt";
 import Auth from "./pages/Auth";
 import CustomerDetail from "./pages/CustomerDetail";
 import Customers from "./pages/Customers";
+import EditCustomer from "./pages/EditCustomer";
 import Home from "./pages/Home";
 import Onboarding from "./pages/Onboarding";
 import PaymentSuccess from "./pages/PaymentSuccess";
@@ -43,6 +44,7 @@ export default function App() {
             <Route path="new" element={<AddCustomer />} />
             <Route path=":id" element={<CustomerLayout />}>
               <Route index element={<CustomerDetail />} />
+              <Route path="edit" element={<EditCustomer />} />
               <Route path="debt" element={<AddDebt />} />
               <Route path="payment" element={<RecordPayment />} />
               <Route path="payment/success" element={<PaymentSuccess />} />

@@ -25,6 +25,28 @@
   --font: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
+[data-theme="dark"] {
+  color-scheme: dark;
+  --green-950: #d9f0e2;
+  --green-900: #bde1cb;
+  --green-800: #a6d3b8;
+  --green-700: #8fc8a7;
+  --green-600: #70b28d;
+  --green-100: #254637;
+  --green-50: #1e352b;
+  --cream: #121915;
+  --paper: #1b2420;
+  --line: #304039;
+  --ink: #edf5ef;
+  --muted: #a7b8ae;
+  --amber: #e8b44d;
+  --amber-dark: #f1c96e;
+  --amber-soft: #49391e;
+  --red: #ef8068;
+  --red-soft: #482a25;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body, #root { min-height: 100%; }
@@ -260,11 +282,16 @@ code { background: var(--green-50); padding: 1px 6px; border-radius: 6px; font-s
 .empty-illustration div { position: relative; display: grid; place-items: center; width: 70px; height: 70px; border-radius: 50%; background: var(--green-700); color: #fff; }
 
 .customer-hero {
-  display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 14px 16px;
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px 16px;
   background: var(--paper); border: 1px solid var(--line); border-radius: 24px; padding: 18px;
 }
 .customer-hero h2 { font-size: 1.35rem; }
 .customer-hero span { color: var(--muted); font-size: 0.9rem; }
+.hero-edit {
+  display: grid; place-items: center; width: 42px; height: 42px; margin-left: auto; align-self: start;
+  border: 1px solid var(--line); border-radius: 13px; background: var(--paper); color: var(--green-700);
+}
+.hero-edit:hover { background: var(--green-50); }
 .hero-balance { grid-column: 1 / -1; background: var(--green-50); border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; }
 .hero-balance small { color: var(--muted); font-weight: 700; }
 .hero-balance strong { font-size: 2rem; color: var(--green-800); }
@@ -388,6 +415,16 @@ code { background: var(--green-50); padding: 1px 6px; border-radius: 6px; font-s
 .offline-card { display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: 18px; background: var(--green-50); }
 .offline-card i { width: 12px; height: 12px; border-radius: 50%; background: var(--green-600); box-shadow: 0 0 0 5px rgba(42, 116, 85, 0.18); flex: none; }
 .offline-card p { color: var(--muted); font-size: 0.88rem; }
+.theme-toggle {
+  position: relative; width: 52px; height: 30px; flex: none; border-radius: 99px;
+  background: var(--line); transition: background 0.2s ease;
+}
+.theme-toggle span {
+  position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%;
+  background: var(--paper); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25); transition: transform 0.2s ease;
+}
+.theme-toggle.on { background: var(--green-600); }
+.theme-toggle.on span { transform: translateX(22px); }
 .version { text-align: center; color: var(--muted); }
 
 /* ---------- Onboarding ---------- */

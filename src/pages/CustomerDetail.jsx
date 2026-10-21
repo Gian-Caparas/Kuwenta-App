@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Avatar from "../components/ui/Avatar";
 import Button from "../components/ui/Button";
 import Header from "../components/ui/Header";
+import Icon from "../components/ui/Icon";
 import { useCustomer } from "../hooks/useCustomer";
 import { peso, shortDate, timeOfDay } from "../lib/format";
 
@@ -20,6 +21,14 @@ export default function CustomerDetail() {
         <div className="customer-hero">
           <Avatar name={customer.name} large />
           <div><h2>{customer.name}</h2><span>{customer.phone || "Walang numero"}</span></div>
+          <button
+            type="button"
+            className="hero-edit"
+            onClick={() => navigate(`${base}/edit`)}
+            aria-label={`I-edit ang detalye ni ${customer.name}`}
+          >
+            <Icon name="edit" size={20} />
+          </button>
           <div className="hero-balance">
             <small>Kasalukuyang balanse</small>
             <strong>{peso(customer.balance)}</strong>
