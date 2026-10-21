@@ -1,0 +1,41 @@
+import { useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { CustomersProvider, useCustomers } from "../../context/CustomersContext";
+import { ToastProvider } from "../../context/ToastContext";
+import { useOnlineStatus } from "../../hooks/useOnlineStatus";
+import { ErrorState, LoadingState } from "../ui/StateScreen";
+import BottomNav from "./BottomNav";
+
+function Shell() {
+  const { pathname } = useLocation();
+  const online = useOnlineStatus();
+  const { loading, error, reload } = useCustomers();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pathname]);
+
+  let content = <Outlet />;
+  if (loading) content = <LoadingState />;
+  else if (error) content = <ErrorState error={error} onRetry={reload} />;
+
+  return (
+    <div className="app-shell">
+      <ToastProvider>
+        <BottomNav />
+        <main className="app-main">
+          {!online && <div className="offline-banner">Offline ka — kailangan ng internet para mag-save</div>}
+          {content}
+        </main>
+      </ToastProvider>
+    </div>
+  );
+}
+
+export default function AppLayout() {
+  return (
+    <CustomersProvider>
+      <Shell />
+    </CustomersProvider>
+  );
+}
