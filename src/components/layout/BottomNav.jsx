@@ -1,20 +1,22 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import Icon from "../ui/Icon";
-
-const tabs = [
-  { to: "/", label: "Home", icon: "home" },
-  { to: "/customers", label: "Mga Suki", icon: "users" },
-  { to: "/reports", label: "Ulat", icon: "chart" },
-  { to: "/settings", label: "Settings", icon: "settings" },
-];
+import { useTranslation } from "../../hooks/useTranslation";
 
 export default function BottomNav() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const isActive = (to) => (to === "/" ? pathname === "/" : pathname.startsWith(to));
 
+  const tabs = [
+    { to: "/", label: t("customers.title"), icon: "home" },
+    { to: "/customers", label: t("customers.title"), icon: "users" },
+    { to: "/reports", label: t("reports.title"), icon: "chart" },
+    { to: "/settings", label: t("settings.title"), icon: "settings" },
+  ];
+
   return (
-    <nav className="nav-shell" aria-label="Pangunahing navigation">
+    <nav className="nav-shell" aria-label={t("common.navigation")}>
       <div className="brand"><span className="brand-mark">K</span><span>Kuwenta</span></div>
       {tabs.map((tab) => (
         <button

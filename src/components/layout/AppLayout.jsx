@@ -5,11 +5,13 @@ import { ToastProvider } from "../../context/ToastContext";
 import { useOnlineStatus } from "../../hooks/useOnlineStatus";
 import { ErrorState, LoadingState } from "../ui/StateScreen";
 import BottomNav from "./BottomNav";
+import { useTranslation } from "../../hooks/useTranslation";
 
 function Shell() {
   const { pathname } = useLocation();
   const online = useOnlineStatus();
   const { loading, error, reload } = useCustomers();
+  const { t } = useTranslation();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -24,7 +26,7 @@ function Shell() {
       <ToastProvider>
         <BottomNav />
         <main className="app-main">
-          {!online && <div className="offline-banner">Offline ka — kailangan ng internet para mag-save</div>}
+          {!online && <div className="offline-banner">{t("common.offline")}</div>}
           {content}
         </main>
       </ToastProvider>

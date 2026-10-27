@@ -1,6 +1,9 @@
+import { useTranslation } from "../../hooks/useTranslation";
+
 const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "back"];
 
 export default function Keypad({ value, onChange }) {
+  const { t } = useTranslation();
   const press = (key) => {
     if (key === "back") {
       onChange(value.slice(0, -1));
@@ -16,7 +19,7 @@ export default function Keypad({ value, onChange }) {
   return (
     <div className="keypad">
       {keys.map((key) => (
-        <button key={key} type="button" onClick={() => press(key)} aria-label={key === "back" ? "Burahin" : key}>
+        <button key={key} type="button" onClick={() => press(key)} aria-label={key === "back" ? t("common.delete") : key}>
           {key === "back" ? "⌫" : key}
         </button>
       ))}

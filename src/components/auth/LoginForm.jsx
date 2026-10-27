@@ -4,6 +4,8 @@ import { supabase } from "../../lib/supabase";
 import { isValidEmail } from "../../lib/validation";
 import Button from "../ui/Button";
 import PasswordField from "./PasswordField";
+import { useTranslation } from "../../hooks/useTranslation";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function LoginForm({ onSwitch }) {
   const [email, setEmail] = useState("");
@@ -11,6 +13,8 @@ export default function LoginForm({ onSwitch }) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [authError, setAuthError] = useState("");
+  const { t } = useTranslation();
+  const { language } = useLanguage();
 
   const validEmail = isValidEmail(email);
   const passwordTooShort = password.length < 6;
@@ -24,10 +28,10 @@ export default function LoginForm({ onSwitch }) {
     setLoading(true);
     try {
       const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
-      if (error) setAuthError(authErrorMessage(error, "Mali ang email o password. Subukan ulit."));
+      if (error) setAuthError(authErrorMessage(error, t("auth.invalidCredentials"), language));
       // On success, AuthContext picks up the session and <Auth/> redirects to "/".
     } catch (err) {
-      setAuthError(authErrorMessage(err, "May problema sa koneksyon. Subukan ulit."));
+      setAuthError(authErrorMessage(err, t("auth.connectionError"), language));
     } finally {
       setLoading(false);
     }
@@ -39,18 +43,18 @@ export default function LoginForm({ onSwitch }) {
       provider: "google",
       options: { redirectTo: window.location.origin },
     });
-    if (error) setAuthError("Hindi pa available ang Google login.");
+    if (error) setAuthError(t("auth.connectionError"));
   };
 
   return (
     <form className="auth-form" onSubmit={submit} noValidate>
       <div className="auth-heading">
-        <h2>Welcome back!</h2>
-        <p>Ilagay ang detalye mo para makabalik sa tindahan.</p>
+        <h2>{t("auth.welcomeBack")}</h2>
+        <p>{t("auth.enterDetails")}</p>
       </div>
 
       <label className={`field ${submitted && !validEmail ? "field-error" : ""}`}>
-        <span>Email</span>
+        <span>{t("auth.email")}</span>
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -58,36 +62,36 @@ export default function LoginForm({ onSwitch }) {
           placeholder="maria@email.com"
           autoComplete="email"
         />
-        {submitted && !validEmail && <small>Pakilagay ang tamang email.</small>}
+        {submitted && !validEmail && <small>{t("auth.invalidEmail")}</small>}
       </label>
 
       <PasswordField
         value={password}
         onChange={setPassword}
-        placeholder="Ilagay ang password"
+        placeholder={t("auth.password")}
         autoComplete="current-password"
         invalid={submitted && passwordTooShort}
       >
-        {submitted && passwordTooShort && <small>Mali ang email o password. Subukan ulit.</small>}
+        {submitted && passwordTooShort && <small>{t("auth.invalidCredentials")}</small>}
       </PasswordField>
 
       <button type="button" className="forgot-link" onClick={() => onSwitch("forgot")}>
-        Nakalimutan ang password?
+        {t("auth.forgotPassword")}
       </button>
 
       {authError && <p className="auth-error" role="alert">{authError}</p>}
 
       <Button type="submit" disabled={loading}>
-        {loading ? <><span className="spinner" />Sandali lang...</> : "Mag-login"}
+        {loading ? <><span className="spinner" />{t("auth.loading")}</> : t("auth.loginButton")}
       </Button>
 
-      <div className="auth-divider"><span>o</span></div>
+      <div className="auth-divider"><span>{t("auth.or")}</span></div>
       <Button variant="ghost" onClick={google}>
-        <span className="google-mark">G</span>Magpatuloy gamit ang Google
+        <span className="google-mark">G</span>{t("auth.googleShort")}
       </Button>
 
       <p className="auth-switch">
-        Wala pang account? <button type="button" onClick={() => onSwitch("signup")}>Mag-sign up</button>
+        {t("auth.switchToSignup")} <button type="button" onClick={() => onSwitch("signup")}>{t("auth.signup")}</button>
       </p>
     </form>
   );

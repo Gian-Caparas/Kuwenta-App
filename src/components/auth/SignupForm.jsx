@@ -4,6 +4,8 @@ import { supabase } from "../../lib/supabase";
 import { isValidEmail } from "../../lib/validation";
 import Button from "../ui/Button";
 import PasswordField from "./PasswordField";
+import { useTranslation } from "../../hooks/useTranslation";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function SignupForm({ onSwitch, onSuccess }) {
   const [storeName, setStoreName] = useState("");
@@ -15,6 +17,8 @@ export default function SignupForm({ onSwitch, onSuccess }) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [authError, setAuthError] = useState("");
+  const { t } = useTranslation();
+  const { language } = useLanguage();
 
   const validEmail = isValidEmail(email);
   const passwordMismatch = submitted && password !== confirmPassword;
@@ -44,7 +48,7 @@ export default function SignupForm({ onSwitch, onSuccess }) {
       // If email confirmation is off, a session exists and AuthContext logs the user in.
       if (!data.session) onSuccess(email.trim());
     } catch (err) {
-      setAuthError(authErrorMessage(err, "May problema sa paggawa ng account. Subukan ulit."));
+      setAuthError(authErrorMessage(err, t("auth.createAccountError"), language));
     } finally {
       setLoading(false);
     }
@@ -53,23 +57,23 @@ export default function SignupForm({ onSwitch, onSuccess }) {
   return (
     <form className="auth-form" onSubmit={submit} noValidate>
       <div className="auth-heading">
-        <h2>Simulan ang Kuewenta</h2>
-        <p>Kaunting detalye lang at handa ka nang magtala.</p>
+        <h2>{t("onboarding.welcome")}</h2>
+        <p>{t("onboarding.desc")}</p>
       </div>
 
       <label className={`field ${submitted && !storeName.trim() ? "field-error" : ""}`}>
-        <span>Pangalan ng tindahan</span>
-        <input value={storeName} onChange={(e) => setStoreName(e.target.value)} placeholder="Hal. Tindahan ni Maria" />
-        {submitted && !storeName.trim() && <small>Ano ang pangalan ng tindahan mo?</small>}
+        <span>{t("auth.storeName")}</span>
+        <input value={storeName} onChange={(e) => setStoreName(e.target.value)} placeholder={t("auth.storeNamePlaceholder")} />
+        {submitted && !storeName.trim() && <small>{t("auth.storeNameRequired")}</small>}
       </label>
 
       <label className={`field ${submitted && !fullName.trim() ? "field-error" : ""}`}>
-        <span>Buong pangalan</span>
-        <input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Maria Santos" autoComplete="name" />
+        <span>{t("auth.fullName")}</span>
+        <input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder={t("auth.fullNamePlaceholder")} autoComplete="name" />
       </label>
 
       <label className={`field ${submitted && !validEmail ? "field-error" : ""}`}>
-        <span>Email</span>
+        <span>{t("auth.email")}</span>
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -77,48 +81,48 @@ export default function SignupForm({ onSwitch, onSuccess }) {
           placeholder="maria@email.com"
           autoComplete="email"
         />
-        {submitted && !validEmail && <small>Pakilagay ang tamang email.</small>}
+        {submitted && !validEmail && <small>{t("auth.invalidEmail")}</small>}
       </label>
 
       <PasswordField
         value={password}
         onChange={setPassword}
-        placeholder="Gumawa ng password"
+        placeholder={t("auth.passwordPlaceholder")}
         autoComplete="new-password"
         invalid={submitted && password.length < 8}
       >
         <small className={password.length >= 8 ? "strength-good" : "strength-hint"}>
-          {password.length >= 8 ? "Ayos—matibay ang password mo." : "Gumamit ng 8 characters o higit pa."}
+          {password.length >= 8 ? t("auth.passwordStrong") : t("auth.passwordHint")}
         </small>
       </PasswordField>
 
       <label className={`field ${passwordMismatch ? "field-error" : ""}`}>
-        <span>Ulitin ang password</span>
+        <span>{t("auth.confirmPassword")}</span>
         <input
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           type="password"
-          placeholder="Ilagay ulit ang password"
+          placeholder={t("auth.confirmPasswordPlaceholder")}
           autoComplete="new-password"
         />
-        {passwordMismatch && <small>Hindi magkatugma ang password.</small>}
+        {passwordMismatch && <small>{t("auth.passwordMismatch")}</small>}
       </label>
 
       <label className={`check-row ${submitted && !agreed ? "check-error" : ""}`}>
         <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
         <span>
-          Sumasang-ayon ako sa <button type="button">Terms</button> at <button type="button">Privacy Policy</button>.
+          {t("auth.terms")}
         </span>
       </label>
 
       {authError && <p className="auth-error" role="alert">{authError}</p>}
 
       <Button type="submit" disabled={loading}>
-        {loading ? <><span className="spinner" />Ginagawa ang account...</> : "Gumawa ng Account"}
+        {loading ? <><span className="spinner" />{t("auth.creatingAccount")}</> : t("auth.signupButton")}
       </Button>
 
       <p className="auth-switch">
-        May account na? <button type="button" onClick={() => onSwitch("login")}>Mag-login</button>
+        {t("auth.switchToLogin")} <button type="button" onClick={() => onSwitch("login")}>{t("auth.login")}</button>
       </p>
     </form>
   );
