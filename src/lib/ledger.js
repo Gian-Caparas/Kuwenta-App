@@ -78,14 +78,14 @@ export function monthTotals(transactions, reference = new Date()) {
 }
 
 /** Last `months` months of utang vs bayad, with bar heights as percentages. */
-export function monthlySeries(transactions, months = 6) {
+export function monthlySeries(transactions, months = 6, language = "filipino") {
   const now = new Date();
   const series = [];
 
   for (let i = months - 1; i >= 0; i -= 1) {
     const ref = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const rows = transactions.filter((t) => inMonth(t.created_at, ref));
-    series.push({ key: `${ref.getFullYear()}-${ref.getMonth()}`, label: monthShort(ref.getMonth()), debt: sumBy(rows, "debt"), paid: sumBy(rows, "payment") });
+    series.push({ key: `${ref.getFullYear()}-${ref.getMonth()}`, label: monthShort(ref.getMonth(), language), debt: sumBy(rows, "debt"), paid: sumBy(rows, "payment") });
   }
 
   const max = Math.max(1, ...series.map((s) => Math.max(s.debt, s.paid)));

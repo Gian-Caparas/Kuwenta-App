@@ -1,7 +1,13 @@
-const SHORT_MONTHS = ["Ene", "Peb", "Mar", "Abr", "May", "Hun", "Hul", "Ago", "Set", "Okt", "Nob", "Dis"];
-const LONG_MONTHS = [
+const SHORT_MONTHS_FIL = ["Ene", "Peb", "Mar", "Abr", "May", "Hun", "Hul", "Ago", "Set", "Okt", "Nob", "Dis"];
+const LONG_MONTHS_FIL = [
   "Enero", "Pebrero", "Marso", "Abril", "Mayo", "Hunyo",
   "Hulyo", "Agosto", "Setyembre", "Oktubre", "Nobyembre", "Disyembre",
+];
+
+const SHORT_MONTHS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const LONG_MONTHS_EN = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
 ];
 
 export const peso = (value) =>
@@ -12,15 +18,31 @@ export const peso = (value) =>
     maximumFractionDigits: 2,
   }).format(value);
 
-export const monthShort = (index) => SHORT_MONTHS[index];
-export const monthLong = (index) => LONG_MONTHS[index];
-
-export const shortDate = (date = new Date()) => {
-  const d = new Date(date);
-  return `${SHORT_MONTHS[d.getMonth()]} ${d.getDate()}`;
+const getMonthArrays = (language) => {
+  const isFilipino = language === "filipino";
+  return {
+    short: isFilipino ? SHORT_MONTHS_FIL : SHORT_MONTHS_EN,
+    long: isFilipino ? LONG_MONTHS_FIL : LONG_MONTHS_EN,
+  };
 };
 
-export const fullDate = (date = new Date()) => `${shortDate(date)}, ${new Date(date).getFullYear()}`;
+export const monthShort = (index, language = "filipino") => {
+  const { short } = getMonthArrays(language);
+  return short[index];
+};
+
+export const monthLong = (index, language = "filipino") => {
+  const { long } = getMonthArrays(language);
+  return long[index];
+};
+
+export const shortDate = (date = new Date(), language = "filipino") => {
+  const { short } = getMonthArrays(language);
+  const d = new Date(date);
+  return `${short[d.getMonth()]} ${d.getDate()}`;
+};
+
+export const fullDate = (date = new Date(), language = "filipino") => `${shortDate(date, language)}, ${new Date(date).getFullYear()}`;
 
 export const timeOfDay = (date) =>
   new Date(date).toLocaleTimeString("en-PH", { hour: "numeric", minute: "2-digit" });
@@ -37,18 +59,25 @@ export const daysSince = (date) => {
 };
 
 /** "Ngayon, 9:30 AM", "Kahapon", or "Hun 12" */
-export function relativeDay(date) {
-  if (!date) return "Wala pang aktibidad";
+export function relativeDay(date, language = "filipino") {
+  if (!date) return language === "filipino" ? "Wala pang aktibidad" : "No activity yet";
   const days = daysSince(date);
-  if (days === 0) return `Ngayon, ${timeOfDay(date)}`;
-  if (days === 1) return "Kahapon";
-  return shortDate(date);
+  if (days === 0) return `${language === "filipino" ? "Ngayon" : "Today"}, ${timeOfDay(date)}`;
+  if (days === 1) return language === "filipino" ? "Kahapon" : "Yesterday";
+  return shortDate(date, language);
 }
 
-export function greeting() {
+export function greeting(language = "filipino") {
   const hour = new Date().getHours();
-  if (hour < 11) return "Magandang umaga!";
-  if (hour < 13) return "Magandang tanghali!";
-  if (hour < 18) return "Magandang hapon!";
-  return "Magandang gabi!";
+  if (language === "filipino") {
+    if (hour < 11) return "Magandang umaga!";
+    if (hour < 13) return "Magandang tanghali!";
+    if (hour < 18) return "Magandang hapon!";
+    return "Magandang gabi!";
+  } else {
+    if (hour < 11) return "Good morning!";
+    if (hour < 13) return "Good noon!";
+    if (hour < 18) return "Good afternoon!";
+    return "Good evening!";
+  }
 }
