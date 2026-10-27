@@ -4,30 +4,32 @@ import Header from "../components/ui/Header";
 import { useCustomers } from "../context/CustomersContext";
 import { monthLong, peso } from "../lib/format";
 import { monthlySeries, monthTotals, oldestBalances } from "../lib/ledger";
+import { useTranslation } from "../hooks/useTranslation";
 
 export default function Reports() {
   const { customers, transactions } = useCustomers();
+  const { t, language } = useTranslation();
   const now = new Date();
 
   const totals = useMemo(() => monthTotals(transactions), [transactions]);
-  const bars = useMemo(() => monthlySeries(transactions, 6), [transactions]);
+  const bars = useMemo(() => monthlySeries(transactions, 6, language), [transactions, language]);
   const oldest = useMemo(() => oldestBalances(customers, 3), [customers]);
 
   return (
     <div>
-      <Header title="Ulat" subtitle={`${monthLong(now.getMonth())} ${now.getFullYear()}`} />
+      <Header title={t("reports.title")} subtitle={t("reports.subtitle", { month: t(`common.months.long.${["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"][now.getMonth()]}`, { default: monthLong(now.getMonth(), language) }), year: now.getFullYear() })} />
       <section className="content">
         <div className="report-summary">
-          <div><small>Kabuuang utang</small><strong className="debt-text">{peso(totals.debt)}</strong><span>Ngayong buwan</span></div>
-          <div><small>Mga bayad</small><strong className="paid-text">{peso(totals.paid)}</strong><span>Ngayong buwan</span></div>
+          <div><small>{t("reports.totalDebt")}</small><strong className="debt-text">{peso(totals.debt)}</strong><span>{t("reports.thisMonth")}</span></div>
+          <div><small>{t("reports.totalPaid")}</small><strong className="paid-text">{peso(totals.paid)}</strong><span>{t("reports.thisMonth")}</span></div>
         </div>
 
         <div className="chart-card">
           <div className="section-heading">
-            <div><h2>Utang at bayad</h2><p>Buwanang galaw</p></div>
+            <div><h2>{t("reports.chartTitle")}</h2><p>{t("reports.chartDesc")}</p></div>
             <div className="legend">
-              <span><i className="debt-bar" />Utang</span>
-              <span><i className="paid-bar" />Bayad</span>
+              <span><i className="debt-bar" />{t("reports.legend.debt")}</span>
+              <span><i className="paid-bar" />{t("reports.legend.paid")}</span>
             </div>
           </div>
           <div className="bar-chart">
@@ -44,7 +46,7 @@ export default function Reports() {
         </div>
 
         <div className="section-heading">
-          <div><span className="eyebrow">Dapat kamustahin</span><h2>Pinakamatagal na balanse</h2></div>
+          <div><span className="eyebrow">{t("reports.oldestTitle")}</span><h2>{t("reports.oldestSubtitle")}</h2></div>
         </div>
         {oldest.length > 0 ? (
           <div className="oldest-list">
@@ -53,7 +55,7 @@ export default function Reports() {
                 <Avatar name={c.name} />
                 <span>
                   <strong>{c.name}</strong>
-                  <small>{c.days === 0 ? "Ngayon nagsimula" : `${c.days} araw na`}</small>
+                  <small>{c.days === 0 ? t("reports.startedToday") : t("reports.daysAgo", { days: c.days })}</small>
                 </span>
                 <b>{peso(c.balance)}</b>
               </div>
@@ -62,7 +64,7 @@ export default function Reports() {
         ) : (
           <div className="friendly-note">
             <div className="note-icon"><Avatar name="OK" /></div>
-            <div><strong>Walang matagal na balanse</strong><p>Wala pang suki na may nakabinbing utang.</p></div>
+            <div><strong>{t("reports.noOldest")}</strong><p>{t("reports.noOldestDesc")}</p></div>
           </div>
         )}
       </section>

@@ -6,12 +6,14 @@ import Icon from "../components/ui/Icon";
 import { useCustomers } from "../context/CustomersContext";
 import { useToast } from "../context/ToastContext";
 import { useCustomer } from "../hooks/useCustomer";
+import { useTranslation } from "../hooks/useTranslation";
 
 export default function EditCustomer() {
   const customer = useCustomer();
   const navigate = useNavigate();
   const { updateCustomer } = useCustomers();
   const { notify } = useToast();
+  const { t } = useTranslation();
   const [name, setName] = useState(customer.name);
   const [phone, setPhone] = useState(customer.phone || "");
   const [notes, setNotes] = useState(customer.notes || "");
@@ -25,11 +27,11 @@ export default function EditCustomer() {
         phone: phone.trim(),
         notes: notes.trim(),
       });
-      notify(`Na-update ang detalye ni ${updatedCustomer.name}.`);
+      notify(`${t("common.save")}d: ${updatedCustomer.name}`);
       navigate(`/customers/${customer.id}`);
     } catch (err) {
       if (import.meta.env.DEV) console.error("[data]", err);
-      notify("Hindi na-update ang detalye. Subukan ulit.", "error");
+      notify(t("common.error") + ": " + t("customerForm.save"), "error");
     } finally {
       setSaving(false);
     }
@@ -38,29 +40,29 @@ export default function EditCustomer() {
   return (
     <div>
       <Header
-        title="I-edit ang Suki"
-        subtitle="Ayusin ang pangunahing detalye"
+        title={t("customerForm.editTitle")}
+        subtitle={t("customerForm.editSubtitle")}
         back={() => navigate(`/customers/${customer.id}`)}
       />
       <section className="content form-stack">
         <label className="field">
-          <span>Pangalan <b>*</b></span>
+          <span>{t("customerForm.name")} <b>*</b></span>
           <input value={name} onChange={(e) => setName(e.target.value)} autoFocus />
         </label>
         <label className="field">
-          <span>Numero ng telepono</span>
-          <input value={phone} onChange={(e) => setPhone(e.target.value)} inputMode="tel" placeholder="09XX XXX XXXX" />
+          <span>{t("customerForm.phone")}</span>
+          <input value={phone} onChange={(e) => setPhone(e.target.value)} inputMode="tel" placeholder={t("customerForm.phonePlaceholder")} />
         </label>
         <label className="field">
-          <span>Notes <small>(optional)</small></span>
+          <span>{t("customerForm.notes")} <small>({t("common.optional")})</small></span>
           <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={4} />
         </label>
         <div className="privacy-note">
           <Icon name="cloud" />
-          <p>Ligtas ang impormasyon. Naka-save ito sa iyong account.</p>
+          <p>{t("customerForm.privacyNote")}</p>
         </div>
         <Button onClick={save} disabled={!name.trim() || saving}>
-          {saving ? <><span className="spinner" />Sandali lang...</> : "I-save ang pagbabago"}
+          {saving ? <><span className="spinner" />{t("customerForm.saving")}</> : t("customerForm.saveChanges")}
         </Button>
       </section>
     </div>

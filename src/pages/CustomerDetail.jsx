@@ -5,6 +5,7 @@ import Header from "../components/ui/Header";
 import Icon from "../components/ui/Icon";
 import { useCustomer } from "../hooks/useCustomer";
 import { peso, shortDate, timeOfDay } from "../lib/format";
+import { useTranslation } from "../hooks/useTranslation";
 
 const HISTORY_LIMIT = 30;
 
@@ -13,42 +14,43 @@ export default function CustomerDetail() {
   const navigate = useNavigate();
   const base = `/customers/${customer.id}`;
   const history = customer.transactions.slice(0, HISTORY_LIMIT);
+  const { t, language } = useTranslation();
 
   return (
     <div>
-      <Header title="Detalye ng suki" back={() => navigate("/customers")} />
+      <Header title={t("customer.detail", { default: "Customer Detail" })} back={() => navigate("/customers")} />
       <section className="content">
         <div className="customer-hero">
           <Avatar name={customer.name} large />
-          <div><h2>{customer.name}</h2><span>{customer.phone || "Walang numero"}</span></div>
+          <div><h2>{customer.name}</h2><span>{customer.phone || t("common.noPhone")}</span></div>
           <button
             type="button"
             className="hero-edit"
             onClick={() => navigate(`${base}/edit`)}
-            aria-label={`I-edit ang detalye ni ${customer.name}`}
+            aria-label={t("customer.editDetails", { name: customer.name })}
           >
             <Icon name="edit" size={20} />
           </button>
           <div className="hero-balance">
-            <small>Kasalukuyang balanse</small>
+            <small>{t("customer.currentBalance")}</small>
             <strong>{peso(customer.balance)}</strong>
           </div>
         </div>
 
         <div className="action-grid">
-          <Button onClick={() => navigate(`${base}/debt`)} icon="plus">Dagdag Utang</Button>
+          <Button onClick={() => navigate(`${base}/debt`)} icon="plus">{t("customer.addDebt")}</Button>
           <Button
             onClick={() => navigate(`${base}/payment`)}
             icon="wallet"
             variant="secondary"
             disabled={customer.balance <= 0}
           >
-            Tanggap Bayad
+            {t("customer.recordPayment")}
           </Button>
         </div>
 
         <div className="section-heading">
-          <div><span className="eyebrow">Aktibidad</span><h2>Kasaysayan</h2></div>
+          <div><span className="eyebrow">{t("customer.activity")}</span><h2>{t("customer.history")}</h2></div>
         </div>
 
         {history.length > 0 ? (
@@ -57,9 +59,9 @@ export default function CustomerDetail() {
               <div className={`transaction ${t.type}`} key={t.id}>
                 <span className="timeline-dot" />
                 <div>
-                  <strong>{t.type === "debt" ? "Utang" : "Bayad"}</strong>
-                  <p>{t.note || (t.type === "debt" ? "Walang note" : "Cash payment")}</p>
-                  <small>{shortDate(t.created_at)} • {timeOfDay(t.created_at)}</small>
+                  <strong>{t.type === "debt" ? t("common.debt") : t("common.payment")}</strong>
+                  <p>{t.note || (t.type === "debt" ? t("common.noNote") : t("payment.note"))}</p>
+                  <small>{shortDate(t.created_at, language)} • {timeOfDay(t.created_at)}</small>
                 </div>
                 <b>{t.type === "debt" ? "+" : "−"} {peso(Number(t.amount))}</b>
               </div>
@@ -69,15 +71,15 @@ export default function CustomerDetail() {
           <div className="friendly-note">
             <div className="note-icon"><Avatar name={customer.name} /></div>
             <div>
-              <strong>Wala pang kasaysayan</strong>
-              <p>Itala ang unang utang ni {customer.name} para magsimula.</p>
+              <strong>{t("customer.noHistory")}</strong>
+              <p>{t("customer.firstDebtPrompt", { name: customer.name })}</p>
             </div>
           </div>
         )}
 
         {customer.balance > 0 && (
           <Button variant="ghost" icon="bell" onClick={() => navigate(`${base}/reminder`)}>
-            Magpadala ng Paalala
+            {t("customer.sendReminder")}
           </Button>
         )}
       </section>

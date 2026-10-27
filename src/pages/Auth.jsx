@@ -7,9 +7,11 @@ import ForgotForm from "../components/auth/ForgotForm";
 import LoginForm from "../components/auth/LoginForm";
 import SignupForm from "../components/auth/SignupForm";
 import Icon from "../components/ui/Icon";
+import { useTranslation } from "../hooks/useTranslation";
 
 export default function Auth() {
   const { session } = useAuth();
+  const { t } = useTranslation();
   const [view, setView] = useState("login"); // "login" | "signup" | "forgot" | "success"
   const [successKind, setSuccessKind] = useState("signup");
   const [email, setEmail] = useState("");
@@ -30,12 +32,12 @@ export default function Auth() {
       <section className="auth-panel">
         <div className="auth-card">
           {(view === "login" || view === "signup") && (
-            <div className="auth-tabs" role="tablist" aria-label="Piliin ang account action">
+            <div className="auth-tabs" role="tablist" aria-label={t("auth.or")}>
               <button type="button" role="tab" aria-selected={view === "login"} className={view === "login" ? "active" : ""} onClick={() => setView("login")}>
-                Mag-login
+                {t("auth.login")}
               </button>
               <button type="button" role="tab" aria-selected={view === "signup"} className={view === "signup" ? "active" : ""} onClick={() => setView("signup")}>
-                Mag-sign up
+                {t("auth.signup")}
               </button>
             </div>
           )}
@@ -48,7 +50,7 @@ export default function Auth() {
 
         <div className="signal-note">
           <Icon name="cloud" size={18} />
-          <span>Naka-save sa account mo, ligtas at laging handa</span>
+          <span>{t("auth.signalNote")}</span>
         </div>
       </section>
     </main>

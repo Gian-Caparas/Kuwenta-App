@@ -3,25 +3,27 @@ import Button from "../components/ui/Button";
 import Icon from "../components/ui/Icon";
 import { useCustomer } from "../hooks/useCustomer";
 import { fullDate, peso } from "../lib/format";
+import { useTranslation } from "../hooks/useTranslation";
 
 export default function PaymentSuccess() {
   const customer = useCustomer();
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const amount = Number(params.get("amount") ?? 0);
+  const { t, language } = useTranslation();
 
   return (
     <div className="success-screen">
       <div className="success-check"><Icon name="check" size={42} /></div>
-      <span className="eyebrow">Naitala na</span>
-      <h1>Salamat! Bayad naitala.</h1>
-      <p>Ang bayad ni {customer.name} ay ligtas nang naka-save.</p>
+      <span className="eyebrow">{t("paymentSuccess.subtitle")}</span>
+      <h1>{t("paymentSuccess.title")}</h1>
+      <p>{t("paymentSuccess.savedMessage", { name: customer.name })}</p>
       <div className="receipt">
-        <div><span>Natanggap</span><strong className="paid-text">{peso(amount)}</strong></div>
-        <div><span>Bagong balanse</span><strong>{peso(customer.balance)}</strong></div>
-        <div><span>Petsa</span><strong>{fullDate()}</strong></div>
+        <div><span>{t("paymentSuccess.received")}</span><strong className="paid-text">{peso(amount)}</strong></div>
+        <div><span>{t("paymentSuccess.newBalance")}</span><strong>{peso(customer.balance)}</strong></div>
+        <div><span>{t("paymentSuccess.date")}</span><strong>{fullDate(new Date(), language)}</strong></div>
       </div>
-      <Button onClick={() => navigate(`/customers/${customer.id}`, { replace: true })}>Bumalik sa Detalye</Button>
+      <Button onClick={() => navigate(`/customers/${customer.id}`, { replace: true })}>{t("paymentSuccess.backToDetails")}</Button>
     </div>
   );
 }

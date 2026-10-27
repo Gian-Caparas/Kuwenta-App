@@ -5,6 +5,7 @@ import { useToast } from "../context/ToastContext";
 import { useCustomer } from "../hooks/useCustomer";
 import { useGoBack } from "../hooks/useGoBack";
 import { peso } from "../lib/format";
+import { useTranslation } from "../hooks/useTranslation";
 
 export default function AddDebt() {
   const customer = useCustomer();
@@ -12,17 +13,18 @@ export default function AddDebt() {
   const { addTransaction } = useCustomers();
   const { notify } = useToast();
   const goBack = useGoBack(`/customers/${customer.id}`);
+  const { t } = useTranslation();
 
   const save = async (amount, note) => {
     try {
       await addTransaction(customer.id, "debt", amount, note);
       navigate("/");
-      notify(`Naitala ang ${peso(amount)} na utang ni ${customer.name}.`);
+      notify(`${t("debt.save")}: ${peso(amount)} ${t("common.for")} ${customer.name}.`);
     } catch (err) {
       if (import.meta.env.DEV) console.error("[data]", err);
-      notify("Hindi na-save ang utang. Subukan ulit.", "error");
+      notify(t("common.error") + ": " + t("debt.save"), "error");
     }
   };
 
-  return <AmountEntry title="Bagong Utang" mode="debt" customer={customer} back={goBack} onSave={save} />;
+  return <AmountEntry title={t("debt.title")} mode="debt" customer={customer} back={goBack} onSave={save} />;
 }

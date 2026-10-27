@@ -4,17 +4,19 @@ import { useAuth } from "../auth/AuthContext";
 import { markOnboarded } from "../auth/onboarding";
 import Button from "../components/ui/Button";
 import Icon from "../components/ui/Icon";
+import { useTranslation } from "../hooks/useTranslation";
 
 const slides = [
-  { icon: "wallet", title: "Itala ang bawat utang", text: "Mabilis at malinaw—hindi na kailangang maghanap sa lumang kuwaderno." },
-  { icon: "users", title: "Alamin kung sino ang may balanse", text: "Makikita agad ang may utang, bayad na, at lampas sa takdang araw." },
-  { icon: "bell", title: "Singilin nang magalang", text: "Magpadala ng magiliw na paalala sa SMS o Messenger." },
+  { icon: "wallet", title: "onboarding.slide1.title", text: "onboarding.slide1.text" },
+  { icon: "users", title: "onboarding.slide2.title", text: "onboarding.slide2.text" },
+  { icon: "bell", title: "onboarding.slide3.title", text: "onboarding.slide3.text" },
 ];
 
 export default function Onboarding() {
   const [slide, setSlide] = useState(0);
   const { session } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const finish = () => {
     if (session) markOnboarded(session.user.id);
@@ -30,17 +32,17 @@ export default function Onboarding() {
         <div className="notebook"><Icon name={slides[slide].icon} size={48} /><i /><i /><i /></div>
       </div>
       <section className="onboard-copy" key={slide}>
-        <span className="eyebrow">Mas madaling tindahan</span>
-        <h1>{slides[slide].title}</h1>
-        <p>{slides[slide].text}</p>
+        <span className="eyebrow">{t("onboarding.easierStore")}</span>
+        <h1>{t(slides[slide].title)}</h1>
+        <p>{t(slides[slide].text)}</p>
       </section>
       <div className="dots">
         {slides.map((_, index) => <span key={index} className={index === slide ? "active" : ""} />)}
       </div>
       <Button onClick={() => (slide < 2 ? setSlide(slide + 1) : finish())}>
-        {slide === 2 ? "Simulan" : "Susunod"}
+        {slide === 2 ? t("onboarding.start") : t("onboarding.next")}
       </Button>
-      {slide < 2 && <button type="button" className="skip" onClick={finish}>Laktawan</button>}
+      {slide < 2 && <button type="button" className="skip" onClick={finish}>{t("onboarding.skip")}</button>}
     </main>
   );
 }
