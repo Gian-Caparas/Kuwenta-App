@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { AuthProvider } from "./auth/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import { LanguageProvider } from "./context/LanguageContext";
 import { isSupabaseConfigured } from "./lib/supabase";
 import "./styles.css";
 
@@ -24,9 +25,11 @@ createRoot(document.getElementById("root")).render(
     {isSupabaseConfigured ? (
       <BrowserRouter>
         <ThemeProvider>
-          <AuthProvider>
-            <App />
-          </AuthProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <App />
+            </AuthProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </BrowserRouter>
     ) : (
