@@ -55,15 +55,15 @@ export default function CustomerDetail() {
 
         {history.length > 0 ? (
           <div className="timeline">
-            {history.map((t) => (
-              <div className={`transaction ${t.type}`} key={t.id}>
+            {history.map((txn) => (
+              <div className={`transaction ${txn.type}`} key={txn.id}>
                 <span className="timeline-dot" />
                 <div>
-                  <strong>{t.type === "debt" ? t("common.debt") : t("common.payment")}</strong>
-                  <p>{t.note || (t.type === "debt" ? t("common.noNote") : t("payment.note"))}</p>
-                  <small>{shortDate(t.created_at, language)} • {timeOfDay(t.created_at)}</small>
+                  <strong>{txn.type === "debt" ? t("common.debt") : t("common.payment")}</strong>
+                  <p>{txn.note || (txn.type === "debt" ? t("common.noNote") : t("payment.note"))}</p>
+                  <small>{shortDate(txn.created_at, language)} • {timeOfDay(txn.created_at)}</small>
                 </div>
-                <b>{t.type === "debt" ? "+" : "−"} {peso(Number(t.amount))}</b>
+                <b>{txn.type === "debt" ? "+" : "−"} {peso(Number(txn.amount))}</b>
               </div>
             ))}
           </div>
