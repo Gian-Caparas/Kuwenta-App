@@ -180,6 +180,9 @@ code { background: var(--green-50); padding: 1px 6px; border-radius: 6px; font-s
   height: 54px; padding: 0 22px; border-radius: 18px;
   font-weight: 800; font-size: 1rem; transition: transform 0.1s ease, opacity 0.15s ease;
 }
+.button > span {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+}
 .button:active:not(:disabled) { transform: scale(0.98); }
 .button:disabled { opacity: 0.5; }
 .button-full { width: 100%; }
