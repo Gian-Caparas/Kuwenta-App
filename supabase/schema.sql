@@ -20,7 +20,7 @@ create table if not exists public.transactions (
   amount       numeric(12, 2) not null check (amount > 0),
   note         text,
   created_at   timestamptz not null default now(),
-  due_date     timestamptz, not null
+  due_date     timestamptz
 );
 
 create index if not exists customers_user_idx    on public.customers (user_id);

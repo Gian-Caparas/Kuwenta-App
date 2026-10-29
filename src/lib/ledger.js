@@ -1,4 +1,3 @@
-import { OVERDUE_DAYS } from "../config";
 import { daysSince, monthShort } from "./format";
 
 /**
@@ -6,10 +5,17 @@ import { daysSince, monthShort } from "./format";
  * { ...customer, balance, status, lastActivity, owedSince, transactions (newest first) }
  */
 export function buildLedger(customers, transactions) {
+  const now = new Date();
   const map = new Map(
     customers.map((customer) => [
       customer.id,
-      { ...customer, balance: 0, lastActivity: null, owedSince: null, transactions: [] },
+      { ...customer, 
+        balance: 0, 
+        lastActivity: null, 
+        owedSince: null,
+        due_date: customer.due_date ?? null,
+        transactions: [],
+      },
     ])
   );
 
@@ -25,9 +31,14 @@ export function buildLedger(customers, transactions) {
 
     if (before <= 0 && after > 0) entry.owedSince = t.created_at;
     if (after <= 0) entry.owedSince = null;
-
+  
     entry.balance = after;
     entry.lastActivity = t.created_at;
+
+    if(t.due_date != null){
+      entry.due_date = t.due_date;
+    }
+
     entry.transactions.push(t);
   }
 
@@ -35,7 +46,7 @@ export function buildLedger(customers, transactions) {
     .map((entry) => {
       let status = "active";
       if (entry.balance <= 0) status = "paid";
-      else if (daysSince(entry.owedSince) >= OVERDUE_DAYS) status = "overdue";
+      else if (entry.due_date && new Date(entry.due_date) < now) status = "overdue";
       return { ...entry, status, transactions: entry.transactions.slice().reverse() };
     })
     .sort(

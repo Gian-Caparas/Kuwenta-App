@@ -413,11 +413,15 @@ const translations = {
     "debt.description": "Description (optional)",
     "debt.itemsPlaceholder": "E.g. Rice, coffee, sugar",
     "debt.date": "Date",
+    "debt.payDate": "Date to pay",
     "debt.today": "Today, {date}",
     "debt.save": "Save Debt",
     "debt.fullPayment": "Full payment",
     "debt.fullPaymentDesc": "Record full {amount}",
     "debt.saving": "Saving...",
+    "debt.dueDate": "Petsa ng pagbabayad",  // "Expected payment date"
+    "debt.dueDateLabel": "Inaasahang petsa ng bayad",
+    "debt.dueDatePlaceholder": "Piliin ang petsa",
 
     // Record Payment
     "payment.title": "Record Payment",

@@ -4,6 +4,7 @@ import Button from "../ui/Button";
 import Header from "../ui/Header";
 import Keypad from "../ui/Keypad";
 import { useTranslation } from "../../hooks/useTranslation";
+import { OVERDUE_DAYS } from "../../config";
 
 /**
  * Shared amount screen used by "Bagong Utang" (mode="debt") and "Tanggap Bayad" (mode="payment").
@@ -28,11 +29,22 @@ export default function AmountEntry({ title, customer, mode, back, onSave }) {
   const save = async () => {
     setSaving(true);
     try {
-      await onSave(numeric, note.trim());
+      await onSave(numeric, note.trim(), dueDate);
     } finally {
       setSaving(false);
     }
   };
+
+  const [dueDate, setDueDate] = useState(() => {
+    const date = new Date();
+    date.setDate(date.getDate() + OVERDUE_DAYS);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  });
 
   return (
     <div>
@@ -63,6 +75,9 @@ export default function AmountEntry({ title, customer, mode, back, onSave }) {
             <label className="field compact">
               <span>{t("debt.description")}</span>
               <input value={note} onChange={(e) => setNote(e.target.value)} placeholder={t("debt.itemsPlaceholder")} />
+
+              <span>{t("debt.payDate")}</span>
+              <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
             </label>
             <div className="date-row"><span>{t("debt.date")}</span><strong>{t("debt.today", { date: shortDate(new Date(), language) })}</strong></div>
           </>

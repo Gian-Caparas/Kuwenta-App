@@ -80,10 +80,10 @@ export function CustomersProvider({ children }) {
     return data;
   }, []);
 
-  const addTransaction = useCallback(async (customerId, type, amount, note) => {
+  const addTransaction = useCallback(async (customerId, type, amount, note,  due_date) => {
     const { data, error: insertError } = await supabase
       .from("transactions")
-      .insert({ customer_id: customerId, type, amount, note: note || null })
+      .insert({ customer_id: customerId, type, amount, note: note || null, due_date })
       .select()
       .single();
     if (insertError) throw insertError;

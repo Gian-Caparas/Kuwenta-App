@@ -15,9 +15,9 @@ export default function AddDebt() {
   const goBack = useGoBack(`/customers/${customer.id}`);
   const { t } = useTranslation();
 
-  const save = async (amount, note) => {
+  const save = async (amount, note, due_date) => {
     try {
-      await addTransaction(customer.id, "debt", amount, note);
+      await addTransaction(customer.id, "debt", amount, note, due_date);
       navigate("/");
       notify(`${t("debt.save")}: ${peso(amount)} ${t("common.for")} ${customer.name}.`);
     } catch (err) {
