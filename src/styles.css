@@ -187,7 +187,7 @@ code { background: var(--green-50); padding: 1px 6px; border-radius: 6px; font-s
 .button:disabled { opacity: 0.5; }
 .button-full { width: 100%; }
 .button-primary { background: var(--green-700); color: #fff; box-shadow: 0 10px 22px rgba(29, 90, 67, 0.28); }
-.button-secondary { background: #ffb433; color: #694301; box-shadow: 0 10px 22px rgba(224, 193, 53, 0.28);}
+.button-secondary { background: #ffb433; color: #694301; box-shadow: 0 10px 22px rgb(135, 116, 26, 0.28);}
 .button-danger { background: var(--red-soft); color: var(--red); }
 .button-ghost { background: transparent; border: 1.5px solid var(--line); color: var(--green-800); }
 
