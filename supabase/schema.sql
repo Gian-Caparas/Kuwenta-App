@@ -19,7 +19,8 @@ create table if not exists public.transactions (
   type         text not null check (type in ('debt', 'payment')),
   amount       numeric(12, 2) not null check (amount > 0),
   note         text,
-  created_at   timestamptz not null default now()
+  created_at   timestamptz not null default now(),
+  due_date     timestamptz, not null
 );
 
 create index if not exists customers_user_idx    on public.customers (user_id);
