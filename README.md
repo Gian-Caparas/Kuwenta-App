@@ -168,18 +168,6 @@ All styles live in `src/styles.css` (plain CSS, no framework). If you have the o
 
 ---
 
-## 📝 Naming note
-
-| Name | Where it appears |
-|------|------------------|
-| **Kuwenta** | Repository name (`Kuwenta-App`), README title, user-facing brand |
-| **Kuewenta** | `package.json` `"name"` field, internal code references |
-| **kuewenta** | Lowercase variant in some configs |
-
-All three refer to the same project. The repo is **Kuwenta-App**; the npm package name is **kuewenta** (lowercase, no hyphen, valid for npm). The user-facing brand is **Kuwenta**.
-
----
-
 ## Not built yet
 
 - Working offline (the app needs internet to save; an offline banner is shown)
