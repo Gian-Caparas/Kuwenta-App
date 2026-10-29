@@ -42,18 +42,71 @@ Google login is wired up in the code but only works after you enable the Google 
 
 ```
 src/
-  main.jsx, App.jsx        Entry point and routes
-  pages/                   One file per screen
+  main.jsx, App.jsx              Entry point and routes
+  config.js                      App configuration (overdue days, etc.)
+  styles.css                     Global styles (plain CSS, no framework)
+  pages/                         One file per screen
+    Home.jsx                     Dashboard with stats and quick actions
+    Customers.jsx                Customer list with search/filter
+    CustomerDetail.jsx           Customer ledger + add debt/payment
+    AddCustomer.jsx              Create new customer
+    EditCustomer.jsx             Edit customer details
+    AddDebt.jsx                  Record new debt (utang)
+    RecordPayment.jsx            Record payment (bayad)
+    SelectCustomer.jsx           Pick a customer for debt/payment
+    Reports.jsx                  6-month summary + longest-overdue
+    Settings.jsx                 Language, theme, store info, logout
+    Reminder.jsx                 SMS reminder composer
+    Auth.jsx                     Auth landing (login/signup/forgot)
+    Onboarding.jsx               First-run store setup
+    ResetPassword.jsx            Password reset flow
+    PaymentSuccess.jsx           Success screen after payment
   components/
-    ui/                    Button, Header, Icon, Keypad, ...
-    auth/                  Login, Signup, Forgot password forms
-    customers/             CustomerRow, AmountEntry
-    layout/                AppLayout, BottomNav, CustomerLayout
-  auth/                    AuthContext, ProtectedRoute, onboarding flag
-  context/                 CustomersContext (Supabase data), ToastContext
-  hooks/                   useCustomer, useProfile, useGoBack, ...
-  lib/                     supabase client, ledger math, formatting, errors
-supabase/schema.sql        Database tables + security policies
+    ui/                          Reusable UI primitives
+      Button.jsx                 Primary/secondary/ghost buttons
+      Header.jsx                 Page header with title/actions
+      Icon.jsx                   SVG icon system
+      Keypad.jsx                 Numeric keypad for amounts
+      Avatar.jsx                 User/store avatar
+      EmptyState.jsx             Illustrative empty states
+      StateScreen.jsx            Loading/error/offline screens
+    auth/                        Auth form components
+      LoginForm.jsx              Email/password + Google login
+      SignupForm.jsx             Registration form
+      ForgotForm.jsx             Forgot password request
+      PasswordField.jsx          Reusable password input
+      AuthIntro.jsx              Auth landing illustration
+      AuthSuccess.jsx            Post-auth success screen
+    customers/                   Customer-specific components
+      CustomerRow.jsx            Customer list item
+      AmountEntry.jsx            Amount input with keypad
+    layout/                      Layout shells
+      AppLayout.jsx              Main app shell with bottom nav
+      BottomNav.jsx              Bottom navigation bar
+      CustomerLayout.jsx         Customer detail layout
+  auth/                          Auth logic
+    AuthContext.jsx              Supabase auth state + methods
+    ProtectedRoute.jsx           Route guard for authenticated pages
+    onboarding.js                Onboarding completion flag
+  context/                       React context providers
+    CustomersContext.jsx         Supabase customers + transactions
+    ToastContext.jsx             Global toast notifications
+    LanguageContext.jsx          i18n (English/Tagalog)
+    ThemeContext.jsx             Light/dark theme
+  hooks/                         Custom React hooks
+    useCustomer.js               Single customer + transactions
+    useGoBack.js                 Navigation history helper
+    useOnlineStatus.js           Online/offline detection
+    useProfile.js                Current user profile
+    useTranslation.js            Translation helper (t function)
+  lib/                           Utilities & clients
+    supabase.js                  Supabase client singleton
+    ledger.js                    Balance/overdue calculations
+    format.js                    Currency, date, phone formatting
+    authErrors.js                User-friendly auth error messages
+    translations.js              English/Tagalog string tables
+    validation.js                Input validation helpers
+supabase/schema.sql              Database tables + RLS policies
 ```
 
 ## How the numbers work
