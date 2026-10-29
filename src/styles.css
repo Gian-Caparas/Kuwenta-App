@@ -1018,7 +1018,7 @@ code { background: var(--green-50); padding: 1px 6px; border-radius: 6px; font-s
 .auth-brand .brand-mark { background: var(--amber); color: #3b2a05; }
 .auth-message h1 { font-size: 1.6rem; font-weight: 800; line-height: 1.15; }
 .auth-message p, .auth-illustration { display: none; }
-.auth-message .eyebrow { color: #f3cf86; }
+.auth-message .eyebrow { color: #ffa900; }
 .auth-weave { position: absolute; left: 0; right: 0; bottom: 0; height: 8px; background: repeating-linear-gradient(135deg, var(--amber) 0 10px, var(--green-600) 10px 20px, var(--paper) 20px 30px, var(--red) 30px 40px); opacity: 0.8; }
 
 .auth-panel { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 20px 16px 28px; }
