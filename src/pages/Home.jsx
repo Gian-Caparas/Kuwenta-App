@@ -102,7 +102,7 @@ export default function Home() {
       <button
         type="button"
         className="fab"
-        onClick={() => navigate(customers.length ? "/debt/select" : "/customers/new")}
+        onClick={() => navigate("customers")}
       >
         <Icon name="plus" /><span>{t("home.newDebt")}</span>
       </button>
