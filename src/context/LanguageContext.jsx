@@ -24,7 +24,8 @@ export function LanguageProvider({ children }) {
 
   // Set initial lang on mount
   useEffect(() => {
-    document.documentElement.lang = LANGUAGES[language].htmlLang;
+    const initialLang = getInitialLanguage();
+    document.documentElement.lang = LANGUAGES[initialLang].htmlLang;
   }, []);
 
   const setLanguage = (langCode) => {

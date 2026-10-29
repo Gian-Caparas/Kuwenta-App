@@ -10,7 +10,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { useTranslation } from "../hooks/useTranslation";
 
 export default function Settings() {
-  const { language, setLanguage, languages } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const { t } = useTranslation();
   const { storeName, email } = useProfile();
   const { notify } = useToast();
