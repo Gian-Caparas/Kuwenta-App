@@ -44,7 +44,7 @@ export default function AddCustomer() {
           <input value={phone} onChange={(e) => setPhone(e.target.value)} inputMode="tel" placeholder={t("customerForm.phonePlaceholder")} />
         </label>
         <label className="field">
-          <span>{t("customerForm.notes")} <small>({t("common.cancel")})</small></span>
+          <span>{t("customerForm.notes")}</span>
           <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder={t("customerForm.notesPlaceholder")} rows={4} />
         </label>
         <div className="privacy-note">
