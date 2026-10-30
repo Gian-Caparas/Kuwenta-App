@@ -59,6 +59,8 @@ const translations = {
     "customers.filter.overdue": "Lampas na",
     "customers.filter.paid": "Bayad na",
     "customers.customerCount": "{count} customer",
+    "customerRow.unpaidTransaction": "Hindi bayad na transaksyon",
+    "customerRow.dueDate": "due {date}",
 
     // Customer Detail
     "customer.edit": "I-edit",
@@ -371,6 +373,8 @@ const translations = {
     "customers.filter.overdue": "Overdue",
     "customers.filter.paid": "Paid",
     "customers.customerCount": "{count} customer",
+    "customerRow.unpaidTransaction": "Unpaid transaction",
+    "customerRow.dueDate": "due {date}",
 
     // Customer Detail
     "customer.edit": "Edit",

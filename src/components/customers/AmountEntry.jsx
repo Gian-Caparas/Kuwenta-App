@@ -16,6 +16,10 @@ export default function AmountEntry({ title, customer, mode, back, onSave }) {
   const [note, setNote] = useState("");
   const [saving, setSaving] = useState(false);
   const { t, language } = useTranslation();
+  const todayDate = (() => {
+    const date = new Date();
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  })();
 
   const numeric = Number(amount);
   const tooMuch = mode === "payment" && numeric > customer.balance;
@@ -77,7 +81,14 @@ export default function AmountEntry({ title, customer, mode, back, onSave }) {
               <input value={note} onChange={(e) => setNote(e.target.value)} placeholder={t("debt.itemsPlaceholder")} />
 
               <span>{t("debt.payDate")}</span>
-              <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+              <input
+                type="date"
+                value={dueDate}
+                min={todayDate}
+                onChange={(e) => {
+                  if (e.target.value >= todayDate) setDueDate(e.target.value);
+                }}
+              />
             </label>
             <div className="date-row"><span>{t("debt.date")}</span><strong>{t("debt.today", { date: shortDate(new Date(), language) })}</strong></div>
           </>

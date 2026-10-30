@@ -6,6 +6,7 @@ import { daysSince, monthShort } from "./format";
  */
 export function buildLedger(customers, transactions) {
   const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const map = new Map(
     customers.map((customer) => [
       customer.id,
@@ -44,10 +45,41 @@ export function buildLedger(customers, transactions) {
 
   return [...map.values()]
     .map((entry) => {
+      const debtBalances = entry.transactions
+        .filter((transaction) => transaction.type === "debt")
+        .map((transaction) => ({ transaction, remaining: Number(transaction.amount) }));
+
+      for (const transaction of entry.transactions.filter((item) => item.type === "payment")) {
+        let paymentRemaining = Number(transaction.amount);
+        for (const debt of debtBalances) {
+          const applied = Math.min(debt.remaining, paymentRemaining);
+          debt.remaining = Math.round((debt.remaining - applied) * 100) / 100;
+          paymentRemaining = Math.round((paymentRemaining - applied) * 100) / 100;
+          if (paymentRemaining <= 0) break;
+        }
+      }
+
+      const overdueTransactions = debtBalances
+        .filter(({ transaction, remaining }) => {
+          if (remaining <= 0 || !transaction.due_date) return false;
+          const dueDate = new Date(`${transaction.due_date.slice(0, 10)}T00:00:00`);
+          return dueDate < today;
+        })
+        .map(({ transaction, remaining }) => ({
+          ...transaction,
+          remaining_amount: remaining,
+        }));
+
       let status = "active";
       if (entry.balance <= 0) status = "paid";
-      else if (entry.due_date && new Date(entry.due_date) < now) status = "overdue";
-      return { ...entry, status, transactions: entry.transactions.slice().reverse() };
+      else if (overdueTransactions.length > 0) status = "overdue";
+      return {
+        ...entry,
+        status,
+        overdueAmount: overdueTransactions.reduce((sum, transaction) => sum + transaction.remaining_amount, 0),
+        overdueTransactions: overdueTransactions.slice().reverse(),
+        transactions: entry.transactions.slice().reverse(),
+      };
     })
     .sort(
       (a, b) =>
@@ -73,7 +105,7 @@ export function summarize(customers, transactions) {
   return {
     total: customers.reduce((sum, c) => sum + c.balance, 0),
     overdueCount: overdue.length,
-    overdueTotal: overdue.reduce((sum, c) => sum + c.balance, 0),
+    overdueTotal: overdue.reduce((sum, c) => sum + c.overdueAmount, 0),
     paidThisWeek: sumBy(
       transactions.filter((t) => new Date(t.created_at) >= weekAgo),
       "payment"

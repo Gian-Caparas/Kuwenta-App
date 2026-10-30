@@ -57,7 +57,12 @@ export default function Customers() {
         {visible.length ? (
           <div className="list-card">
             {visible.map((customer) => (
-              <CustomerRow key={customer.id} customer={customer} onClick={() => navigate(`/customers/${customer.id}`)} />
+              <CustomerRow
+                key={customer.id}
+                customer={customer}
+                showOverdueDetails={filter === "overdue"}
+                onClick={() => navigate(`/customers/${customer.id}`)}
+              />
             ))}
           </div>
         ) : (
