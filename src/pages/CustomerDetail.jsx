@@ -22,7 +22,7 @@ export default function CustomerDetail() {
       <section className="content">
         <div className="customer-hero">
           <Avatar name={customer.name} large />
-          <div><h2>{customer.name}</h2><span>{customer.phone || t("common.noPhone")}</span></div>
+          <div><h2>{customer.name}</h2><span>{customer.phone || t("common.noPhone")} | {customer.notes || t("common.noNote")}</span></div>
           <button
             type="button"
             className="hero-edit"
