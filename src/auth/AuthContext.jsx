@@ -14,6 +14,11 @@ export function AuthProvider({ children }) {
   const [recovery, setRecovery] = useState(false);
 
   useEffect(() => {
+    const hashParams = new URLSearchParams(window.location.hash.slice(1));
+    const recoveryLink =
+      hashParams.get("type") === "recovery" && hashParams.has("access_token");
+    if (recoveryLink) setRecovery(true);
+
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setLoading(false);

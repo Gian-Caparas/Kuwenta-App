@@ -10,7 +10,7 @@ export default function AuthSuccess({ kind, email, onBack }) {
 
   const resend = async () => {
     if (kind === "signup") await supabase.auth.resend({ type: "signup", email });
-    else await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin });
+    else await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
     setResent(true);
   };
 

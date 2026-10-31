@@ -30,6 +30,7 @@ export default function App() {
     <Routes>
       {/* Public */}
       <Route path="/auth" element={<Auth />} />
+      <Route path="/reset-password" element={<ResetPassword done={finishRecovery} />} />
 
       {/* Logged-in only */}
       <Route element={<ProtectedRoute />}>
