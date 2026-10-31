@@ -7,12 +7,14 @@ import { useGoBack } from "../hooks/useGoBack";
 import { peso } from "../lib/format";
 import { useTranslation } from "../hooks/useTranslation";
 import { AddDebtSkeleton, useDelayedLoading } from "../components/ui/Skeleton";
+import { useNotifications } from "../context/NotificationsContext";
 
 export default function AddDebt() {
   const customer = useCustomer();
   const navigate = useNavigate();
   const { addTransaction } = useCustomers();
   const { notify } = useToast();
+  const { notifyTransactionCreated } = useNotifications();
   const goBack = useGoBack(`/customers/${customer.id}`);
   const { t } = useTranslation();
 
@@ -25,7 +27,9 @@ export default function AddDebt() {
 
   const save = async (amount, note, due_date) => {
     try {
-      await addTransaction(customer.id, "debt", amount, note, due_date);
+      const transaction = await addTransaction(customer.id, "debt", amount, note, due_date);
+      // Create notification for new debt
+      await notifyTransactionCreated(transaction, customer);
       navigate("/");
       notify(`${t("debt.save")}: ${peso(amount)} ${t("common.for")} ${customer.name}.`);
     } catch (err) {

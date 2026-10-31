@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { CustomersProvider, useCustomers } from "../../context/CustomersContext";
 import { ToastProvider } from "../../context/ToastContext";
+import { NotificationsProvider } from "../../context/NotificationsContext";
 import { useOnlineStatus } from "../../hooks/useOnlineStatus";
 import { ErrorState, LoadingState } from "../ui/StateScreen";
 import BottomNav from "./BottomNav";
@@ -24,11 +25,13 @@ function Shell() {
   return (
     <div className="app-shell">
       <ToastProvider>
-        <BottomNav />
-        <main className="app-main">
-          {!online && <div className="offline-banner">{t("common.offline")}</div>}
-          {content}
-        </main>
+        <NotificationsProvider>
+          <BottomNav />
+          <main className="app-main">
+            {!online && <div className="offline-banner">{t("common.offline")}</div>}
+            {content}
+          </main>
+        </NotificationsProvider>
       </ToastProvider>
     </div>
   );

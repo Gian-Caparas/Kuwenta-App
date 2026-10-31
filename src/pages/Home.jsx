@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomerRow from "../components/customers/CustomerRow";
 import Header from "../components/ui/Header";
@@ -9,12 +9,16 @@ import { greeting, peso } from "../lib/format";
 import { summarize } from "../lib/ledger";
 import { useTranslation } from "../hooks/useTranslation";
 import { HomeSkeleton, useDelayedLoading } from "../components/ui/Skeleton";
+import NotificationPanel from "../components/ui/NotificationPanel";
+import { useNotifications } from "../context/NotificationsContext";
 
 export default function Home() {
   const navigate = useNavigate();
   const { customers, transactions, loading } = useCustomers();
   const { storeName } = useProfile();
   const { t, language } = useTranslation();
+  const { unreadCount } = useNotifications();
+  const [notificationOpen, setNotificationOpen] = useState(false);
 
   // Delay showing skeleton to avoid flickering on fast loads
   const showSkeleton = useDelayedLoading(loading, 300);
@@ -38,11 +42,18 @@ export default function Home() {
         title={greeting(language)}
         subtitle={storeName}
         right={
-          <button type="button" className="icon-button notification" aria-label={t("home.note")}>
-            <Icon name="bell" /><i />
+          <button
+            type="button"
+            className="icon-button notification"
+            aria-label={t("notifications.title", { default: "Notifications" })}
+            onClick={() => setNotificationOpen(true)}
+          >
+            <Icon name="bell" />
+            {unreadCount > 0 && <i />}
           </button>
         }
       />
+      <NotificationPanel isOpen={notificationOpen} onClose={() => setNotificationOpen(false)} />
       <section className="content">
         <div className="balance-card">
           <div>

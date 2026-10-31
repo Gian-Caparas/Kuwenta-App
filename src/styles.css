@@ -1048,6 +1048,121 @@ code { background: var(--green-50); padding: 1px 6px; border-radius: 6px; font-s
 .resend-link:disabled { color: var(--muted); }
 .signal-note { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 0.82rem; font-weight: 700; text-align: center; }
 
+/* ---------- Notification Panel ---------- */
+
+.notification-panel-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  animation: fade-in var(--duration-base) var(--ease-out) forwards;
+}
+.notification-panel-overlay .notification-panel {
+  position: fixed; top: 70px; right: 12px; left: 12px;
+  max-width: 420px; margin-left: auto;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(23, 76, 56, 0.2);
+  display: flex; flex-direction: column; max-height: calc(100vh - 90px);
+  animation: slide-in-right var(--duration-slow) var(--ease-spring) forwards;
+}
+
+.notification-panel-header {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 16px 20px; border-bottom: 1px solid var(--line);
+}
+.notification-panel-header .header-content { display: flex; align-items: center; gap: 10px; }
+.notification-panel-header h2 { font-size: 1.15rem; font-weight: 800; }
+.unread-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 20px; height: 20px; padding: 0 8px; border-radius: 99px;
+  background: var(--amber); color: #3b2a05; font-weight: 800; font-size: 0.75rem;
+  animation: scale-in var(--duration-base) var(--ease-spring) forwards;
+}
+.notification-panel-header .header-actions { display: flex; align-items: center; gap: 8px; }
+.notification-panel-header .icon-button { background: var(--green-50); border-color: var(--line); }
+.notification-panel-header .icon-button:hover { background: var(--green-100); }
+.notification-tabs { display: flex; gap: 4px; padding: 8px 20px 0; border-bottom: 1px solid var(--line); }
+.notification-tabs button {
+  flex: 1; padding: 9px 12px; color: var(--muted); font-weight: 800;
+  border-bottom: 2px solid transparent;
+}
+.notification-tabs button.active { color: var(--green-700); border-bottom-color: var(--green-700); }
+
+.notification-panel-content { flex: 1; overflow-y: auto; padding: 8px 4px; }
+
+.notification-empty-state {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  padding: 40px 20px; text-align: center; color: var(--muted);
+}
+.notification-empty-state .empty-icon { color: var(--line); opacity: 0.6; }
+.notification-empty-state h3 { color: var(--ink); font-size: 1.1rem; margin: 0; }
+.notification-empty-state p { font-size: 0.9rem; max-width: 280px; margin: 0; }
+
+.notification-list { display: flex; flex-direction: column; gap: 4px; padding: 4px; }
+
+.notification-item {
+  background: var(--paper); border: 1px solid var(--line); border-radius: 16px;
+  overflow: hidden; transition: box-shadow var(--duration-fast) var(--ease-out);
+}
+.notification-item.unread { background: var(--green-50); border-color: var(--green-100); }
+.notification-item:hover { box-shadow: 0 4px 16px rgba(23, 76, 56, 0.08); }
+.notification-item.read { opacity: 0.7; }
+
+.notification-main {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 16px; cursor: pointer;
+}
+.notification-icon {
+  display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 12px;
+}
+.notification-content { flex: 1; min-width: 0; }
+.notification-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.notification-title { font-size: 0.95rem; font-weight: 800; color: var(--ink); line-height: 1.3; }
+.notification-time { font-size: 0.72rem; color: var(--muted); white-space: nowrap; flex: none; margin-top: 2px; }
+.notification-message { font-size: 0.88rem; color: var(--muted); line-height: 1.4; margin: 0; }
+
+.notification-metadata {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line);
+}
+.meta-item {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.78rem; color: var(--muted); background: var(--cream); padding: 4px 10px; border-radius: 99px;
+}
+.meta-item svg { color: var(--green-700); flex: none; }
+
+.unread-indicator {
+  flex: none; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--amber); margin-top: 4px;
+  animation: badge-pulse 2s var(--ease-in-out) infinite;
+}
+.expand-icon { flex: none; color: var(--muted); transition: transform var(--duration-fast) var(--ease-out); }
+.notification-item.expanded .expand-icon { transform: rotate(180deg); }
+
+.notification-actions {
+  display: flex; gap: 8px; padding: 0 12px 12px; border-top: 1px solid var(--line); margin-top: -4px;
+  opacity: 0; max-height: 0; overflow: hidden; transition: opacity var(--duration-fast), max-height var(--duration-fast);
+}
+.notification-item.expanded .notification-actions { opacity: 1; max-height: 60px; }
+.action-button {
+  display: inline-flex; align-items: center; gap: 6px; flex: 1;
+  min-width: 0; justify-content: center;
+  padding: 8px 12px; border-radius: 10px; font-weight: 700; font-size: 0.82rem;
+  background: var(--green-50); color: var(--green-700); border: 1px solid var(--green-100);
+  transition: background var(--duration-fast), border-color var(--duration-fast);
+}
+.action-button:hover { background: var(--green-100); }
+.action-button.delete { background: var(--red-soft); color: var(--red); border-color: var(--red-soft); }
+.action-button.delete:hover { background: var(--red); color: #fff; border-color: var(--red); }
+.action-button.archive { background: var(--green-50); color: var(--green-700); border-color: var(--green-100); }
+.action-button.archive:hover { background: var(--green-700); color: #fff; border-color: var(--green-700); }
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .notification-panel-overlay .notification-panel {
+    top: 60px; right: 0; left: 0; max-width: none; border-radius: 0 0 20px 20px;
+    max-height: calc(100vh - 60px);
+  }
+}
+
 /* ---------- Desktop ---------- */
 
 @media (min-width: 900px) {
