@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getAuthRedirectUrl } from "../../lib/authRedirect";
 import { supabase } from "../../lib/supabase";
 import Button from "../ui/Button";
 import Icon from "../ui/Icon";
@@ -10,7 +11,7 @@ export default function AuthSuccess({ kind, email, onBack }) {
 
   const resend = async () => {
     if (kind === "signup") await supabase.auth.resend({ type: "signup", email });
-    else await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
+    else await supabase.auth.resetPasswordForEmail(email, { redirectTo: getAuthRedirectUrl() });
     setResent(true);
   };
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { authErrorMessage } from "../../lib/authErrors";
+import { getAuthRedirectUrl } from "../../lib/authRedirect";
 import { supabase } from "../../lib/supabase";
 import { isValidEmail } from "../../lib/validation";
 import Button from "../ui/Button";
@@ -26,7 +27,7 @@ export default function ForgotForm({ onSwitch, onSuccess }) {
     setLoading(true);
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: getAuthRedirectUrl(),
       });
       if (error) throw error;
       onSuccess(email.trim());

@@ -49,6 +49,7 @@ If you don't have `.env.example`, create `.env` with:
 ```env
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key
+VITE_APP_URL=http://localhost:5173
 ```
 
 ---
@@ -75,8 +76,14 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 
 1. Push the repo to GitHub and import it in Vercel.
 2. Add the two `VITE_SUPABASE_*` environment variables in the Vercel project settings.
+   Also add `VITE_APP_URL` with your exact production URL, for example
+   `https://your-app.vercel.app` (no trailing slash), then redeploy.
 3. `vercel.json` already contains the rewrite that makes deep links (like `/customers/123`) work on refresh.
-4. Add your Vercel URL to the Supabase Site URL / Redirect URLs.
+4. In Supabase **Authentication → URL Configuration**:
+   - Set **Site URL** to the same production URL.
+   - Add the same URL followed by `/**` to **Redirect URLs**.
+   - Keep `http://localhost:5173/**` as an additional Redirect URL for local development.
+5. Request a new reset email after deploying. A reset link generated for localhost cannot be changed into a production link, and used/expired links cannot be reused.
 
 ---
 
