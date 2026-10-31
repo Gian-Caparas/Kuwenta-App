@@ -176,7 +176,7 @@ const translations = {
     "auth.verificationSent": "Pinadala ang verification code sa email mo",
     "auth.resendCode": "Ipadala muli ang code",
     "auth.verify": "Verify",
-    "auth.welcomeBack": "Welcome back!",
+    "auth.welcomeBack": "Maligayang pagbalik!",
     "auth.enterDetails": "Ilagay ang detalye mo para makabalik sa tindahan.",
     "auth.invalidEmail": "Pakilagay ang tamang email.",
     "auth.invalidCredentials": "Mali ang email o password. Subukan ulit.",
