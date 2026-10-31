@@ -25,7 +25,7 @@ export default function Onboarding() {
 
   return (
     <main className="onboarding">
-      <div className="onboard-brand"><span className="brand-mark">K</span><span>Kuewenta</span></div>
+      <div className="onboard-brand"><span className="brand-mark">K</span><span>Kuwenta</span></div>
       <div className="onboard-art">
         <div className="sun" />
         <div className="store-roof" />
