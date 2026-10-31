@@ -770,7 +770,7 @@ code { background: var(--green-50); padding: 1px 6px; border-radius: 6px; font-s
 .field > input:focus, .field > textarea:focus, .password-field:focus-within {
   border-color: var(--green-600); box-shadow: 0 0 0 4px rgba(42, 116, 85, 0.12);
 }
-.password-field { display: flex; align-items: center; height: 56px; padding: 0 16px 0 18px; }
+.password-field { display: flex; align-items: center; height: 56px; width: 100%; padding: 0 16px 0 18px; }
 .password-field input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: transparent; padding: 0; }
 .password-field button { font-weight: 800; font-size: 0.85rem; color: var(--green-700); padding: 8px 4px; }
 
@@ -968,6 +968,9 @@ code { background: var(--green-50); padding: 1px 6px; border-radius: 6px; font-s
 .settings-list { gap: 20px; }
 .settings-group { display: flex; flex-direction: column; gap: 12px; padding: 18px; background: var(--paper); border: 1px solid var(--line); border-radius: 24px; }
 .setting-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.password-form { display: flex; flex: 1; align-items: flex-end; gap: 10px; min-width: 0; }
+.password-form .field { flex: 1; min-width: 0; }
+.password-submit { flex: none; width: 170px; white-space: nowrap; }
 .setting-row > span:not(.setting-icon) { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 .setting-row small { color: var(--muted); overflow-wrap: anywhere; }
 .setting-icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 14px; background: var(--green-50); color: var(--green-700); flex: none; }

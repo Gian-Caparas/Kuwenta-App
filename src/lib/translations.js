@@ -23,6 +23,7 @@ const translations = {
     "settings.dataSafe": "Ligtas ang data mo",
     "settings.dataSafeDesc": "Naka-save ito sa cloud at para sa iyo lang ang access.",
     "settings.logout": "Mag-logout",
+    "settings.changePassword": "Palitan ang password",
 
     // Home page
     "home.balance": "Balanse",
@@ -372,6 +373,7 @@ const translations = {
     "settings.dataSafe": "Your data is safe",
     "settings.dataSafeDesc": "Saved in the cloud and only you have access.",
     "settings.logout": "Logout",
+    "settings.changePassword": "Change password",
 
     // Home page
     "home.balance": "Balance",

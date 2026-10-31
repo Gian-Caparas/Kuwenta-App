@@ -16,13 +16,31 @@ export default function Settings() {
   const { notify } = useToast();
   const { darkMode, setDarkMode } = useTheme();
   const [name, setName] = useState(storeName);
-
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
   const saveStoreName = async () => {
     const next = name.trim();
     if (!next || next === storeName) return;
     const { error } = await supabase.auth.updateUser({ data: { store_name: next } });
     if (error) notify("Hindi na-save ang pangalan ng tindahan.", "error");
     else notify("Na-update ang pangalan ng tindahan.");
+  };
+
+  const changePassword = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) {
+      notify(t("auth.createAccountError"), "error");
+    } else {
+      notify(t("success.passwordChanged"));
+      setPassword("");
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -38,6 +56,35 @@ export default function Settings() {
           <div className="setting-row">
             <span><strong>{t("settings.account")}</strong><small>{email}</small></span>
           </div>
+
+          <div className="setting-row">
+          <form className="password-form" onSubmit={changePassword}>
+            <label className="field compact">
+              <span>{t("settings.changePassword")}</span>
+              <div className="password-field">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="new-password"
+                  minLength={8}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((visible) => !visible)}
+                  aria-label={showPassword ? t("auth.hidePassword") : t("auth.showPassword")}
+                >
+                  <Icon name={showPassword ? "eyeOff" : "eye"} size={20} />
+                </button>
+              </div>
+            </label>
+            <button type="submit" className="button button-primary password-submit" disabled={loading || password.length < 8}>
+              {loading ? t("auth.loading") : t("settings.changePassword")}
+            </button>
+          </form>
+          </div>
+
           <div className="setting-row">
             <span><strong>{t("settings.currency")}</strong><small>{t("settings.currencyDesc")}</small></span>
             <b>{t("settings.currencyValue")}</b>
