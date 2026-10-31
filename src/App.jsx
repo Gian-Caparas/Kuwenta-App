@@ -21,10 +21,11 @@ import SelectCustomer from "./pages/SelectCustomer";
 import Settings from "./pages/Settings";
 
 export default function App() {
-  const { loading, recovery, finishRecovery } = useAuth();
+  const { loading, recovery, authLinkError, finishRecovery } = useAuth();
 
   if (loading) return <LoadingState text="Sandali lang..." />;
   if (recovery) return <ResetPassword done={finishRecovery} />;
+  if (authLinkError) return <Auth authLinkError={authLinkError} />;
 
   return (
     <Routes>

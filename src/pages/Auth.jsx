@@ -9,7 +9,7 @@ import SignupForm from "../components/auth/SignupForm";
 import Icon from "../components/ui/Icon";
 import { useTranslation } from "../hooks/useTranslation";
 
-export default function Auth() {
+export default function Auth({ authLinkError = null }) {
   const { session } = useAuth();
   const { t } = useTranslation();
   const [view, setView] = useState("login"); // "login" | "signup" | "forgot" | "success"
@@ -40,6 +40,14 @@ export default function Auth() {
                 {t("auth.signup")}
               </button>
             </div>
+          )}
+
+          {authLinkError && (
+            <p className="auth-error" role="alert">
+              {authLinkError === "otp_expired"
+                ? t("auth.resetLinkExpired")
+                : t("auth.authLinkInvalid")}
+            </p>
           )}
 
           {view === "login" && <LoginForm onSwitch={setView} />}

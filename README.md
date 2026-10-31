@@ -101,6 +101,11 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 - Check internet connection (the app shows an offline banner).
 - Verify Supabase project is not paused (free tier pauses after 1 week of inactivity).
 
+### "Email link is invalid or has expired" / `otp_expired`
+- Start the local app first with `npm run dev`; `ERR_CONNECTION_REFUSED` means nothing is listening on `localhost:5173`.
+- In Supabase **Authentication → URL Configuration**, set the Site URL to `http://localhost:5173` and add `http://localhost:5173/**` to Redirect URLs.
+- Request a new reset email after changing the URL settings. Open the newest link once, in the same browser, before it expires; old links cannot be reused.
+
 ---
 
 ## ✅ Testing & Contribution

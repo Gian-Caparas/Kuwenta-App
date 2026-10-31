@@ -202,6 +202,8 @@ const translations = {
     "auth.weakPassword": "Masyadong mahina ang password. Gumamit ng mas mahaba o mas komplikado.",
     "auth.signupDisabled": "Sarado muna ang pag-sign up sa ngayon.",
     "auth.invalidKey": "May mali sa Supabase key. Tingnan ang .env file.",
+    "auth.resetLinkExpired": "Nag-expire na ang reset link. Humingi ng bagong link at buksan ito agad.",
+    "auth.authLinkInvalid": "Hindi valid ang email link. Humingi ng bagong link at subukan ulit.",
 
     // Forgot Password
     "forgot.title": "I-reset ang password",
@@ -549,6 +551,8 @@ const translations = {
     "auth.weakPassword": "Password is too weak. Use a longer or more complex password.",
     "auth.signupDisabled": "Sign up is currently disabled.",
     "auth.invalidKey": "Invalid Supabase key. Check your .env file.",
+    "auth.resetLinkExpired": "This reset link has expired. Request a new link and open it promptly.",
+    "auth.authLinkInvalid": "This email link is invalid. Request a new link and try again.",
 
     // Forgot Password
     "forgot.title": "Reset Password",
