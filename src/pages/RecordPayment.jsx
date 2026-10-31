@@ -4,6 +4,7 @@ import { useCustomers } from "../context/CustomersContext";
 import { useToast } from "../context/ToastContext";
 import { useCustomer } from "../hooks/useCustomer";
 import { useTranslation } from "../hooks/useTranslation";
+import { RecordPaymentSkeleton, useDelayedLoading } from "../components/ui/Skeleton";
 
 export default function RecordPayment() {
   const customer = useCustomer();
@@ -11,6 +12,13 @@ export default function RecordPayment() {
   const { addTransaction } = useCustomers();
   const { notify } = useToast();
   const { t } = useTranslation();
+
+  // Show skeleton while customer data is loading
+  const showSkeleton = useDelayedLoading(!customer?.id, 300);
+
+  if (showSkeleton) {
+    return <RecordPaymentSkeleton />;
+  }
 
   const save = async (amount) => {
     try {

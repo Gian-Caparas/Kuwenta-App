@@ -4,6 +4,7 @@ import Icon from "../components/ui/Icon";
 import { useCustomer } from "../hooks/useCustomer";
 import { fullDate, peso } from "../lib/format";
 import { useTranslation } from "../hooks/useTranslation";
+import { PaymentSuccessSkeleton, useDelayedLoading } from "../components/ui/Skeleton";
 
 export default function PaymentSuccess() {
   const customer = useCustomer();
@@ -11,6 +12,13 @@ export default function PaymentSuccess() {
   const [params] = useSearchParams();
   const amount = Number(params.get("amount") ?? 0);
   const { t, language } = useTranslation();
+
+  // Show skeleton while customer data is loading
+  const showSkeleton = useDelayedLoading(!customer?.id, 300);
+
+  if (showSkeleton) {
+    return <PaymentSuccessSkeleton />;
+  }
 
   return (
     <div className="success-screen">

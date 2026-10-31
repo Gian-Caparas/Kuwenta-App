@@ -6,6 +6,7 @@ import { useCustomer } from "../hooks/useCustomer";
 import { useGoBack } from "../hooks/useGoBack";
 import { peso } from "../lib/format";
 import { useTranslation } from "../hooks/useTranslation";
+import { AddDebtSkeleton, useDelayedLoading } from "../components/ui/Skeleton";
 
 export default function AddDebt() {
   const customer = useCustomer();
@@ -14,6 +15,13 @@ export default function AddDebt() {
   const { notify } = useToast();
   const goBack = useGoBack(`/customers/${customer.id}`);
   const { t } = useTranslation();
+
+  // Show skeleton while customer data is loading
+  const showSkeleton = useDelayedLoading(!customer?.id, 300);
+
+  if (showSkeleton) {
+    return <AddDebtSkeleton />;
+  }
 
   const save = async (amount, note, due_date) => {
     try {

@@ -9,6 +9,7 @@ import { useProfile } from "../hooks/useProfile";
 import { peso } from "../lib/format";
 import { useTranslation } from "../hooks/useTranslation";
 import { supabase } from "../lib/supabase";
+import { ReminderSkeleton, useDelayedLoading } from "../components/ui/Skeleton";
 
 export default function Reminder() {
   const customer = useCustomer();
@@ -16,11 +17,20 @@ export default function Reminder() {
   const { storeName } = useProfile();
   const { notify } = useToast();
   const { t } = useTranslation();
+
+  // Show skeleton while customer data is loading
+  const showSkeleton = useDelayedLoading(!customer?.id, 300);
+
+  // These hooks must be called on every render (React Hooks rules)
   const [copied, setCopied] = useState(false);
   const [sendingSMS, setSendingSMS] = useState(false);
   const [message, setMessage] = useState(
-    t("reminder.defaultMessage", { name: customer.name, storeName, balance: peso(customer.balance) })
+    t("reminder.defaultMessage", { name: customer?.name, storeName, balance: peso(customer?.balance || 0) })
   );
+
+  if (showSkeleton) {
+    return <ReminderSkeleton />;
+  }
 
   const copy = async () => {
     try {
@@ -37,8 +47,6 @@ export default function Reminder() {
   const messenger = async () => {
     if (await copy()) notify(t("reminder.messengerCopied"));
   };
-
-  const smsHref = `sms:${(customer.phone || "").replace(/\s/g, "")}?body=${encodeURIComponent(message)}`;
 
   const sendSMSViaAPI = async () => {
     if (!customer.phone) {

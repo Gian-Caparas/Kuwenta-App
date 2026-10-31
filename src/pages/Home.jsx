@@ -8,13 +8,18 @@ import { useProfile } from "../hooks/useProfile";
 import { greeting, peso } from "../lib/format";
 import { summarize } from "../lib/ledger";
 import { useTranslation } from "../hooks/useTranslation";
+import { HomeSkeleton, useDelayedLoading } from "../components/ui/Skeleton";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { customers, transactions } = useCustomers();
+  const { customers, transactions, loading } = useCustomers();
   const { storeName } = useProfile();
   const { t, language } = useTranslation();
 
+  // Delay showing skeleton to avoid flickering on fast loads
+  const showSkeleton = useDelayedLoading(loading, 300);
+
+  // These hooks must be called on every render (React Hooks rules)
   const stats = useMemo(() => summarize(customers, transactions), [customers, transactions]);
   const biggest = useMemo(
     () => customers.filter((c) => c.balance > 0).sort((a, b) => b.balance - a.balance).slice(0, 3),
@@ -22,6 +27,10 @@ export default function Home() {
   );
 
   const net = stats.netThisMonth;
+
+  if (showSkeleton) {
+    return <HomeSkeleton />;
+  }
 
   return (
     <div>
@@ -69,7 +78,7 @@ export default function Home() {
         </div>
 
         {biggest.length > 0 ? (
-          <div className="list-card">
+          <div className="list-card stagger-list">
             {biggest.map((customer) => (
               <CustomerRow key={customer.id} customer={customer} onClick={() => navigate(`/customers/${customer.id}`)} />
             ))}

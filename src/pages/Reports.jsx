@@ -5,15 +5,24 @@ import { useCustomers } from "../context/CustomersContext";
 import { monthLong, peso } from "../lib/format";
 import { monthlySeries, monthTotals, oldestBalances } from "../lib/ledger";
 import { useTranslation } from "../hooks/useTranslation";
+import { ReportsSkeleton, useDelayedLoading } from "../components/ui/Skeleton";
 
 export default function Reports() {
-  const { customers, transactions } = useCustomers();
+  const { customers, transactions, loading } = useCustomers();
   const { t, language } = useTranslation();
   const now = new Date();
 
+  // Delay showing skeleton to avoid flickering on fast loads
+  const showSkeleton = useDelayedLoading(loading, 300);
+
+  // These hooks must be called on every render (React Hooks rules)
   const totals = useMemo(() => monthTotals(transactions), [transactions]);
   const bars = useMemo(() => monthlySeries(transactions, 6, language), [transactions, language]);
   const oldest = useMemo(() => oldestBalances(customers, 3), [customers]);
+
+  if (showSkeleton) {
+    return <ReportsSkeleton />;
+  }
 
   return (
     <div>
@@ -49,7 +58,7 @@ export default function Reports() {
           <div><span className="eyebrow">{t("reports.oldestTitle")}</span><h2>{t("reports.oldestSubtitle")}</h2></div>
         </div>
         {oldest.length > 0 ? (
-          <div className="oldest-list">
+          <div className="oldest-list stagger-list">
             {oldest.map((c) => (
               <div key={c.id}>
                 <Avatar name={c.name} />

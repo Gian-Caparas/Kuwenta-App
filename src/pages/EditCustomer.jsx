@@ -7,6 +7,7 @@ import { useCustomers } from "../context/CustomersContext";
 import { useToast } from "../context/ToastContext";
 import { useCustomer } from "../hooks/useCustomer";
 import { useTranslation } from "../hooks/useTranslation";
+import { CustomerFormSkeleton, useDelayedLoading } from "../components/ui/Skeleton";
 
 export default function EditCustomer() {
   const customer = useCustomer();
@@ -14,10 +15,19 @@ export default function EditCustomer() {
   const { updateCustomer } = useCustomers();
   const { notify } = useToast();
   const { t } = useTranslation();
-  const [name, setName] = useState(customer.name);
-  const [phone, setPhone] = useState(customer.phone || "");
-  const [notes, setNotes] = useState(customer.notes || "");
+
+  // Show skeleton while customer data is loading
+  const showSkeleton = useDelayedLoading(!customer?.id, 300);
+
+  // These hooks must be called on every render (React Hooks rules)
+  const [name, setName] = useState(customer?.name || "");
+  const [phone, setPhone] = useState(customer?.phone || "");
+  const [notes, setNotes] = useState(customer?.notes || "");
   const [saving, setSaving] = useState(false);
+
+  if (showSkeleton) {
+    return <CustomerFormSkeleton />;
+  }
 
   const save = async () => {
     setSaving(true);

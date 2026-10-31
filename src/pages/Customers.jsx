@@ -6,6 +6,7 @@ import Header from "../components/ui/Header";
 import Icon from "../components/ui/Icon";
 import { useCustomers } from "../context/CustomersContext";
 import { useTranslation } from "../hooks/useTranslation";
+import { CustomersSkeleton, useDelayedLoading } from "../components/ui/Skeleton";
 
 const filters = [
   { key: "all", label: "customers.filter.all" },
@@ -16,10 +17,17 @@ const filters = [
 
 export default function Customers() {
   const navigate = useNavigate();
-  const { customers } = useCustomers();
+  const { customers, loading } = useCustomers();
   const { t } = useTranslation();
   const [filter, setFilter] = useState("all");
   const [query, setQuery] = useState("");
+
+  // Delay showing skeleton to avoid flickering on fast loads
+  const showSkeleton = useDelayedLoading(loading, 300);
+
+  if (showSkeleton) {
+    return <CustomersSkeleton />;
+  }
 
   const visible = customers.filter((customer) => {
     const matches = customer.name.toLowerCase().includes(query.toLowerCase());
@@ -55,7 +63,7 @@ export default function Customers() {
           ))}
         </div>
         {visible.length ? (
-          <div className="list-card">
+          <div className="list-card stagger-list">
             {visible.map((customer) => (
               <CustomerRow
                 key={customer.id}

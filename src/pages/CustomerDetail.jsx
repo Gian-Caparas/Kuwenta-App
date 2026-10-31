@@ -6,6 +6,7 @@ import Icon from "../components/ui/Icon";
 import { useCustomer } from "../hooks/useCustomer";
 import { peso, shortDate, timeOfDay } from "../lib/format";
 import { useTranslation } from "../hooks/useTranslation";
+import { CustomerDetailSkeleton, useDelayedLoading } from "../components/ui/Skeleton";
 
 const HISTORY_LIMIT = 30;
 
@@ -15,6 +16,14 @@ export default function CustomerDetail() {
   const base = `/customers/${customer.id}`;
   const history = customer.transactions.slice(0, HISTORY_LIMIT);
   const { t, language } = useTranslation();
+
+  // Delay showing skeleton to avoid flickering on fast loads
+  // We check if customer data is still loading by checking if it has an id
+  const showSkeleton = useDelayedLoading(!customer?.id, 300);
+
+  if (showSkeleton) {
+    return <CustomerDetailSkeleton />;
+  }
 
   return (
     <div>
@@ -54,7 +63,7 @@ export default function CustomerDetail() {
         </div>
 
         {history.length > 0 ? (
-          <div className="timeline">
+          <div className="timeline stagger-list">
             {history.map((txn) => (
               <div className={`transaction ${txn.type}`} key={txn.id}>
                 <span className="timeline-dot" />
