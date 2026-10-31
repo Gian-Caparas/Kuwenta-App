@@ -8,6 +8,7 @@ import { useCustomer } from "../hooks/useCustomer";
 import { useProfile } from "../hooks/useProfile";
 import { peso } from "../lib/format";
 import { useTranslation } from "../hooks/useTranslation";
+import { supabase } from "../lib/supabase";
 
 export default function Reminder() {
   const customer = useCustomer();
@@ -16,6 +17,7 @@ export default function Reminder() {
   const { notify } = useToast();
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
+  const [sendingSMS, setSendingSMS] = useState(false);
   const [message, setMessage] = useState(
     t("reminder.defaultMessage", { name: customer.name, storeName, balance: peso(customer.balance) })
   );
@@ -38,6 +40,51 @@ export default function Reminder() {
 
   const smsHref = `sms:${(customer.phone || "").replace(/\s/g, "")}?body=${encodeURIComponent(message)}`;
 
+  const sendSMSViaAPI = async () => {
+    if (!customer.phone) {
+      notify(t("reminder.noPhone"), "error");
+      return;
+    }
+
+    setSendingSMS(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('send-sms', {
+        body: {
+          recipient: customer.phone.replace(/\s/g, ""),
+          message: message
+        },
+      });
+
+      if (error) {
+        let errorMessage = error.message || "Failed to send SMS";
+        const response = error.context;
+
+        if (response instanceof Response) {
+          try {
+            const details = await response.clone().json();
+            errorMessage = details.error || errorMessage;
+          } catch {
+            // Keep the Supabase error when the response is not JSON.
+          }
+        }
+
+        throw new Error(errorMessage);
+      }
+
+      // Check if the response data contains an error from PhilSMS
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
+      notify(t("reminder.smsSent"), "success");
+    } catch (err) {
+      console.error('SMS Error:', err);
+      notify(t("reminder.smsError", { error: err.message || 'Unknown error' }), "error");
+    } finally {
+      setSendingSMS(false);
+    }
+  };
+
   return (
     <div>
       <Header title={t("reminder.title")} subtitle={t("reminder.subtitle", { name: customer.name })} back={() => navigate(`/customers/${customer.id}`)} />
@@ -53,7 +100,14 @@ export default function Reminder() {
         </div>
         <div className="action-grid">
           <Button variant="secondary" icon="copy" onClick={copy}>{copied ? t("reminder.copied") : t("reminder.copy")}</Button>
-          <Button icon="phone" onClick={() => { window.location.href = smsHref; }} disabled={!customer.phone}>{t("reminder.sendSMS")}</Button>
+          <Button
+          variant="primary"
+          icon="send"
+          onClick={sendSMSViaAPI}
+          disabled={sendingSMS || !customer.phone || !supabase}
+        >
+          {sendingSMS ? t("reminder.sendingSMS") : t("reminder.sendSMSAPI")}
+        </Button>
         </div>
         <Button variant="ghost" onClick={messenger}>{t("reminder.sendMessenger")}</Button>
       </section>
